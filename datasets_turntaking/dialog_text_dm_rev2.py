@@ -48,9 +48,9 @@ class ConversationalDM2(pl.LightningDataModule):
         self.datasets = datasets
         self.datasets_subset = datasets_subset
 
-        if savepath is None:
-            savepath = CACHE_PATH
-        self.savepath = join(savepath, self.tokenizer.tokenizer.name_or_path)
+        # if savepath is None:
+        #     savepath = CACHE_PATH
+        # self.savepath = join(savepath, self.tokenizer.tokenizer.name_or_path)
         self.overwrite = overwrite
 
     def get_split_path(self, split):
@@ -94,7 +94,7 @@ class ConversationalDM2(pl.LightningDataModule):
                     dataset = dataset.select([i for i in range(12)])
                 dataset = dataset.map(
                     self.encode,
-                    load_from_cache_file=self.load_from_cache_file,
+                #    load_from_cache_file=self.load_from_cache_file,
                     num_proc=self.num_proc,
                 )
                 dataset_list = []
