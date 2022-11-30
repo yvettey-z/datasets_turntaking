@@ -74,7 +74,7 @@ class ConversationalDM2(pl.LightningDataModule):
         datasets = load_dataset(self.datasets, self.datasets_subset)
 
         for split in ["train", "validation", "test"]:
-            split_path = self.get_split_path(split)
+            # split_path = self.get_split_path(split)
             """
                 if (
                     self.overwrite
