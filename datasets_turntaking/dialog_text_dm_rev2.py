@@ -54,7 +54,8 @@ class ConversationalDM2(pl.LightningDataModule):
         self.overwrite = overwrite
 
     def get_split_path(self, split):
-        return join(self.savepath, split)
+        pass
+        # return join(self.savepath, split)
 
     def filter_empty_turns(self, examples):
         """
@@ -114,12 +115,15 @@ class ConversationalDM2(pl.LightningDataModule):
 
     def setup(self, stage: Optional[str] = None):
         # Assign train/val datasets for use in dataloaders
+        pass
+        """
         if stage == "fit" or stage is None:
             self.train_dset = load_from_disk(self.get_split_path("train"))
             self.val_dset = load_from_disk(self.get_split_path("validation"))
 
         if stage == "test":
             self.test_dset = load_from_disk(self.get_split_path("test"))
+        """
 
     def collate_fn(self, batch):
         
