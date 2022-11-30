@@ -75,40 +75,41 @@ class ConversationalDM2(pl.LightningDataModule):
 
         for split in ["train", "validation", "test"]:
             split_path = self.get_split_path(split)
+            """
+                if (
+                    self.overwrite
+                    or not self.load_from_cache_file
+                    or not exists(split_path)
+                    or len(listdir(split_path)) == 0
+                ):
 
-            if (
-                self.overwrite
-                or not self.load_from_cache_file
-                or not exists(split_path)
-                or len(listdir(split_path)) == 0
-            ):
-
-                # Remove if it exists in order to overwrite
-                if self.overwrite and exists(split_path):
-                    shutil.rmtree(split_path)
-
-                dataset = datasets[split]
-                if split == 'train':
-                    dataset = dataset.select([i for i in range(114)])
-                else:
-                    dataset = dataset.select([i for i in range(12)])
-                dataset = dataset.map(
-                    self.encode,
+                    # Remove if it exists in order to overwrite
+                    if self.overwrite and exists(split_path):
+                        shutil.rmtree(split_path)
+            """
+            dataset = datasets[split]
+            if split == 'train':
+                dataset = dataset.select([i for i in range(114)])
+            else:
+                dataset = dataset.select([i for i in range(12)])
+            dataset = dataset.map(
+                self.encode,
                 #    load_from_cache_file=self.load_from_cache_file,
-                    num_proc=self.num_proc,
-                )
-                dataset_list = []
-                for i in range(len(dataset)):
-                  for j in range(len(dataset[i]['word_ids'])):
-                    data_dict = {'input_ids': dataset[i]['word_ids'][j], 
-                                 'speaker_ids': dataset[i]['speaker_ids'][j]}
-                    dataset_list.append(data_dict)
-                if split == 'train':
-                    self.train_dset = dataset_list
-                if split == 'validation':
-                    self.val_dset = dataset_list
-                if split == 'test':
-                    self.test_dset = dataset_list
+                num_proc=self.num_proc,
+            )
+
+            dataset_list = []
+            for i in range(len(dataset)):
+              for j in range(len(dataset[i]['word_ids'])):
+                data_dict = {'input_ids': dataset[i]['word_ids'][j],
+                             'speaker_ids': dataset[i]['speaker_ids'][j]}
+                dataset_list.append(data_dict)
+            if split == 'train':
+                self.train_dset = dataset_list
+            if split == 'validation':
+                self.val_dset = dataset_list
+            if split == 'test':
+                self.test_dset = dataset_list
 
 
     def setup(self, stage: Optional[str] = None):
