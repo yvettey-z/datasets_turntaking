@@ -90,7 +90,8 @@ class ConversationalDM2(pl.LightningDataModule):
             """
             dataset = datasets[split]
             if split == 'train':
-                dataset = dataset.select([i for i in range(114)])
+                # dataset = dataset.select([i for i in range(114)])
+                dataset = dataset.select([i for i in range(10)])   # for debugging
             else:
                 dataset = dataset.select([i for i in range(12)])
             dataset = dataset.map(
