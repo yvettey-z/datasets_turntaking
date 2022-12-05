@@ -15,7 +15,7 @@ import pytorch_lightning as pl
 CACHE_PATH = join(expanduser("~"), ".cache/datasets_turntaking/conversational")
 
 
-class ConversationalDM2(pl.LightningDataModule):
+class ConversationalDM(pl.LightningDataModule):
     
     def __init__(
         self,
@@ -48,14 +48,13 @@ class ConversationalDM2(pl.LightningDataModule):
         self.datasets = datasets
         self.datasets_subset = datasets_subset
 
-        # if savepath is None:
-        #     savepath = CACHE_PATH
-        # self.savepath = join(savepath, self.tokenizer.tokenizer.name_or_path)
+        if savepath is None:
+            savepath = CACHE_PATH
+        self.savepath = join(savepath, self.tokenizer.tokenizer.name_or_path)
         self.overwrite = overwrite
 
     def get_split_path(self, split):
-        pass
-        # return join(self.savepath, split)
+        return join(self.savepath, split)
 
     def filter_empty_turns(self, examples):
         """
@@ -75,57 +74,51 @@ class ConversationalDM2(pl.LightningDataModule):
         datasets = load_dataset(self.datasets, self.datasets_subset)
 
         for split in ["train", "validation", "test"]:
-            # split_path = self.get_split_path(split)
-            """
-                if (
-                    self.overwrite
-                    or not self.load_from_cache_file
-                    or not exists(split_path)
-                    or len(listdir(split_path)) == 0
-                ):
+            split_path = self.get_split_path(split)
 
-                    # Remove if it exists in order to overwrite
-                    if self.overwrite and exists(split_path):
-                        shutil.rmtree(split_path)
-            """
-            dataset = datasets[split]
-            if split == 'train':
-                # dataset = dataset.select([i for i in range(114)])
-                dataset = dataset.select([i for i in range(6)])   # for debugging
-            else:
-                # dataset = dataset.select([i for i in range(12)])
-                dataset = dataset.select([i for i in range(2)]) # for debugging
-            dataset = dataset.map(
-                self.encode,
-                #    load_from_cache_file=self.load_from_cache_file,
-                num_proc=self.num_proc,
-            )
+            if (
+                self.overwrite
+                or not self.load_from_cache_file
+                or not exists(split_path)
+                or len(listdir(split_path)) == 0
+            ):
 
-            dataset_list = []
-            for i in range(len(dataset)):
-              for j in range(len(dataset[i]['word_ids'])):
-                data_dict = {'input_ids': dataset[i]['word_ids'][j],
-                             'speaker_ids': dataset[i]['speaker_ids'][j]}
-                dataset_list.append(data_dict)
-            if split == 'train':
-                self.train_dset = dataset_list
-            if split == 'validation':
-                self.val_dset = dataset_list
-            if split == 'test':
-                self.test_dset = dataset_list
+                # Remove if it exists in order to overwrite
+                if self.overwrite and exists(split_path):
+                    shutil.rmtree(split_path)
+
+                dataset = datasets[split]
+                if split == 'train':
+                    dataset = dataset.select([i for i in range(114)])
+                else:
+                    dataset = dataset.select([i for i in range(12)])
+                dataset = dataset.map(
+                    self.encode,
+                    load_from_cache_file=self.load_from_cache_file,
+                    num_proc=self.num_proc,
+                )
+                dataset_list = []
+                for i in range(len(dataset)):
+                  for j in range(len(dataset[i]['word_ids'])):
+                    data_dict = {'input_ids': dataset[i]['word_ids'][j], 
+                                 'speaker_ids': dataset[i]['speaker_ids'][j]}
+                    dataset_list.append(data_dict)
+                if split == 'train':
+                    self.train_dset = dataset_list
+                if split == 'validation':
+                    self.val_dset = dataset_list
+                if split == 'test':
+                    self.test_dset = dataset_list
 
 
     def setup(self, stage: Optional[str] = None):
         # Assign train/val datasets for use in dataloaders
-        pass
-        """
         if stage == "fit" or stage is None:
             self.train_dset = load_from_disk(self.get_split_path("train"))
             self.val_dset = load_from_disk(self.get_split_path("validation"))
 
         if stage == "test":
             self.test_dset = load_from_disk(self.get_split_path("test"))
-        """
 
     def collate_fn(self, batch):
         
@@ -189,7 +182,7 @@ class ConversationalDM2(pl.LightningDataModule):
 
         n_cpus = cpu_count()
         parser.add_argument(
-            "--datasets", type=str, nargs="+", default="ami"
+            "--datasets", type=str, nargs="+", default=ConversationalDM.DATASETS
         )
         parser.add_argument("--savepath", default=None, type=str)
         parser.add_argument("--overwrite", default=False, type=bool)
