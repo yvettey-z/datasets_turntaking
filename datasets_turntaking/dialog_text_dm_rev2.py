@@ -266,16 +266,33 @@ class ConversationalDM2(pl.LightningDataModule):
                             del input_ids, speaker_ids, closeup1, closeup2, closeup3, closeup4, corner
                             gc.collect()
                 
-
-        dataset_list_train = listdir(os.path.join(self.tensor_path, 'train'))
+        train_dir_path = os.path.join(self.tensor_path, 'train')
         # so far we moved validation data to different folder
-        # dataset_list_val = listdir(os.path.join(self.tensor_path, 'validation'))
-        dataset_list_val = listdir('/ocean/projects/cis220078p/yasano/amicorpus/validation')
-        dataset_list_test = listdir(os.path.join(self.tensor_path, 'test'))
+        #val_dir_path = os.path.join(self.tensor_path, 'validation')
+        val_dir_path = '/ocean/projects/cis220078p/yasano/amicorpus/validation'
+        test_dir_path = os.path.join(self.tensor_path, 'test')
+        
+        dataset_list_train = self.get_dset_paths(train_dir_path)
+        dataset_list_val = self.get_dset_paths(val_dir_path)
+        dataset_list_test = self.get_dset_paths(test_dir_path)
+        
         self.train_dset = dataset_list_train
         self.val_dset = dataset_list_val
         self.test_dset = dataset_list_test
 
+    def get_dset_paths(self, directory):
+        """
+        Args:
+            directory (str): name of the directory
+        Outputs:
+            file_path_list (list): list of absolute path in the directory
+        """
+        file_path_list = []
+        for dirpath,_,filenames in os.walk(directory):
+            for f in filenames:
+                file_path_list.append(os.path.join(dirpath, f))
+        return file_path_list
+                
 
     def setup(self, stage: Optional[str] = None):
         # Assign train/val datasets for use in dataloaders
@@ -395,7 +412,6 @@ class ConversationalDM2(pl.LightningDataModule):
         parser.add_argument("--load_from_cache_file", default=True, type=bool)
         parser.add_argument("--num_proc", default=n_cpus, type=int)
         return parser
-
 
 
 
