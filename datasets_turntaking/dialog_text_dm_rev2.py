@@ -309,9 +309,6 @@ class ConversationalDM2(pl.LightningDataModule):
     def collate_fn(self, batch):
         # 'batch' will be iterable of path name
         # load data here
-        for path in batch:
-            if re.search("validation8part", path):
-                print(path)
         batch_dict = [np.load(path) for path in batch]
         
         input_word = [torch.tensor(b["input_ids"]) for b in batch_dict] # list of tensor(1024)
