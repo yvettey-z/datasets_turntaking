@@ -217,6 +217,7 @@ class ConversationalDM2(pl.LightningDataModule):
         # arguments for `datasets` library
         parser.add_argument("--batch_size", default=4, type=int)
         parser.add_argument("--num_workers", default=n_cpus, type=int)
+        parser.add_argument("--savepath", default=None, type=str)
         parser.add_argument("--pin_memory", default=True, type=bool)
         parser.add_argument("--load_from_cache_file", default=True, type=bool)
         parser.add_argument("--num_proc", default=n_cpus, type=int)
