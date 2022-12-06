@@ -293,6 +293,9 @@ class ConversationalDM2(pl.LightningDataModule):
         # 'batch' will be iterable of path name
         # load data here
         batch_dict = [np.load(path) for path in batch]
+        for path in batch:
+            if re.search("validation8part2", path):
+                print("exist")
         
         # create batch of tensor 
         input_word = [torch.tensor(b["input_ids"]) for b in batch_dict] # list of tensor(1024)
