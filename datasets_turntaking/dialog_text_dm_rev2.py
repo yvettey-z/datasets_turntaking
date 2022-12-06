@@ -266,16 +266,33 @@ class ConversationalDM2(pl.LightningDataModule):
                             del input_ids, speaker_ids, closeup1, closeup2, closeup3, closeup4, corner
                             gc.collect()
                 
-
-        dataset_list_train = listdir(os.path.join(self.tensor_path, 'train'))
+        train_dir_path = os.path.join(self.tensor_path, 'train')
         # so far we moved validation data to different folder
-        # dataset_list_val = listdir(os.path.join(self.tensor_path, 'validation'))
-        dataset_list_val = listdir('/ocean/projects/cis220078p/yasano/amicorpus/validation')
-        dataset_list_test = listdir(os.path.join(self.tensor_path, 'test'))
+        #val_dir_path = os.path.join(self.tensor_path, 'validation')
+        val_dir_path = '/ocean/projects/cis220078p/yasano/amicorpus/validation'
+        test_dir_path = os.path.join(self.tensor_path, 'test')
+        
+        dataset_list_train = self.get_dset_paths(train_dir_path)
+        dataset_list_val = self.get_dset_paths(val_dir_path)
+        dataset_list_test = self.get_dset_paths(test_dir_path)
+        
         self.train_dset = dataset_list_train
         self.val_dset = dataset_list_val
         self.test_dset = dataset_list_test
 
+    def get_dset_paths(self, directory):
+        """
+        Args:
+            directory (str): name of the directory
+        Outputs:
+            file_path_list (list): list of absolute path in the directory
+        """
+        file_path_list = []
+        for dirpath,_,filenames in os.walk(directory):
+            for f in filenames:
+                file_path_list.append(os.path.join(dirpath, f))
+        return file_path_list
+                
 
     def setup(self, stage: Optional[str] = None):
         # Assign train/val datasets for use in dataloaders
@@ -297,7 +314,6 @@ class ConversationalDM2(pl.LightningDataModule):
                 print(path)
         batch_dict = [np.load(path) for path in batch]
         
-        # create batch of tensor 
         input_word = [torch.tensor(b["input_ids"]) for b in batch_dict] # list of tensor(1024)
         input_speaker = [torch.tensor(b["speaker_ids"]) for b in batch_dict] # list of tensor(1024)
         input_closeup1 = [torch.tensor(b['closeup1']) for b in batch_dict] # list of tensor(1024 * H * W * 3)
@@ -318,7 +334,7 @@ class ConversationalDM2(pl.LightningDataModule):
             input_closeup4[0] = torch.nn.functional.pad(input_closeup4[0].permute([1,2,3,0]), (0, self.max_length-len(input_word[0])), 'constant', 0).permute([3,0,1,2])
             input_corner[0] = torch.nn.functional.pad(input_corner[0].permute([1,2,3,0]), (0, self.max_length-len(input_word[0])), 'constant', 0).permute([3,0,1,2])
 
-        # pad_sequence to input words and frames
+        # pad_sequence to input_word
         input_word_pad = pad_sequence(input_word, batch_first = True, padding_value=self.tokenizer.tokenizer.pad_token_id)
         input_closeup1_pad = pad_sequence(input_closeup1, batch_first = True, padding_value=0)
         input_closeup2_pad = pad_sequence(input_closeup2, batch_first = True, padding_value=0)
@@ -326,7 +342,7 @@ class ConversationalDM2(pl.LightningDataModule):
         input_closeup4_pad = pad_sequence(input_closeup4, batch_first = True, padding_value=0)
         input_corner_pad = pad_sequence(input_corner, batch_first = True, padding_value=0)
         
-        # for speaker_id, pad the last speaker id
+
         # since padding_mode = 'replicate' didn't work, let's do it manually...
         # create a tensor to store the result
         input_speaker_pad = torch.zeros_like(input_word_pad)
@@ -342,7 +358,7 @@ class ConversationalDM2(pl.LightningDataModule):
         
         del input_word, input_speaker, input_closeup1, input_closeup2, input_closeup3, input_closeup4, input_corner
         gc.collect()
-
+        
         return {'input_ids': input_word_pad, 'speaker_ids': input_speaker_pad, 'attention_mask': attention_mask,
                 'closeup1': input_closeup1_pad, 'closeup2': input_closeup2_pad, 'closeup3': input_closeup3_pad, 'closeup4': input_closeup4_pad,
                 'corner': input_corner_pad}
@@ -398,7 +414,6 @@ class ConversationalDM2(pl.LightningDataModule):
         parser.add_argument("--load_from_cache_file", default=True, type=bool)
         parser.add_argument("--num_proc", default=n_cpus, type=int)
         return parser
-
 
 
 
