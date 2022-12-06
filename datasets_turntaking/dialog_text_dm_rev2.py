@@ -208,6 +208,7 @@ class ConversationalDM2(pl.LightningDataModule):
         parser.add_argument(
             "--datasets", type=str, nargs="+", default="ami"
         )
+        parser.add_argument("--overwrite", default=False, type=bool)
         parser.add_argument(
             "--max_length",
             default=1024,
