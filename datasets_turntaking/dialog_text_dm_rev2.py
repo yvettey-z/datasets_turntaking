@@ -313,11 +313,11 @@ class ConversationalDM2(pl.LightningDataModule):
         
         input_word = [torch.tensor(b["input_ids"]) for b in batch_dict] # list of tensor(1024)
         input_speaker = [torch.tensor(b["speaker_ids"]) for b in batch_dict] # list of tensor(1024)
-        input_closeup1 = [torch.tensor(b['closeup1']) for b in batch_dict] # list of tensor(1024 * H * W * 3)
-        input_closeup2 = [torch.tensor(b['closeup2']) for b in batch_dict] # list of tensor(1024 * H * W * 3)
-        input_closeup3 = [torch.tensor(b['closeup3']) for b in batch_dict] # list of tensor(1024 * H * W * 3)
-        input_closeup4 = [torch.tensor(b['closeup4']) for b in batch_dict] # list of tensor(1024 * H * W * 3)
-        input_corner = [torch.tensor(b['corner']) for b in batch_dict]
+        # input_closeup1 = [torch.tensor(b['closeup1']) for b in batch_dict] # list of tensor(1024 * H * W * 3)
+        # input_closeup2 = [torch.tensor(b['closeup2']) for b in batch_dict] # list of tensor(1024 * H * W * 3)
+        # input_closeup3 = [torch.tensor(b['closeup3']) for b in batch_dict] # list of tensor(1024 * H * W * 3)
+        # input_closeup4 = [torch.tensor(b['closeup4']) for b in batch_dict] # list of tensor(1024 * H * W * 3)
+        # input_corner = [torch.tensor(b['corner']) for b in batch_dict]
 
         # before padding everything, create original attention_mask without padding
         attention_mask_list = [torch.ones_like(word) for word in input_word]
@@ -325,19 +325,19 @@ class ConversationalDM2(pl.LightningDataModule):
         # in case all tensor in the batch is shorter than 1024, padding the first entity 
         if len(input_word[0]) != self.max_length:
             input_word[0] = torch.nn.functional.pad(input_word[0], (0, self.max_length-len(input_word[0])), 'constant', self.tokenizer.tokenizer.pad_token_id)
-            input_closeup1[0] = torch.nn.functional.pad(input_closeup1[0].permute([1,2,3,0]), (0, self.max_length-len(input_word[0])), 'constant', 0).permute([3,0,1,2])
-            input_closeup2[0] = torch.nn.functional.pad(input_closeup2[0].permute([1,2,3,0]), (0, self.max_length-len(input_word[0])), 'constant', 0).permute([3,0,1,2])
-            input_closeup3[0] = torch.nn.functional.pad(input_closeup3[0].permute([1,2,3,0]), (0, self.max_length-len(input_word[0])), 'constant', 0).permute([3,0,1,2])
-            input_closeup4[0] = torch.nn.functional.pad(input_closeup4[0].permute([1,2,3,0]), (0, self.max_length-len(input_word[0])), 'constant', 0).permute([3,0,1,2])
-            input_corner[0] = torch.nn.functional.pad(input_corner[0].permute([1,2,3,0]), (0, self.max_length-len(input_word[0])), 'constant', 0).permute([3,0,1,2])
+            # input_closeup1[0] = torch.nn.functional.pad(input_closeup1[0].permute([1,2,3,0]), (0, self.max_length-len(input_word[0])), 'constant', 0).permute([3,0,1,2])
+            # input_closeup2[0] = torch.nn.functional.pad(input_closeup2[0].permute([1,2,3,0]), (0, self.max_length-len(input_word[0])), 'constant', 0).permute([3,0,1,2])
+            # input_closeup3[0] = torch.nn.functional.pad(input_closeup3[0].permute([1,2,3,0]), (0, self.max_length-len(input_word[0])), 'constant', 0).permute([3,0,1,2])
+            # input_closeup4[0] = torch.nn.functional.pad(input_closeup4[0].permute([1,2,3,0]), (0, self.max_length-len(input_word[0])), 'constant', 0).permute([3,0,1,2])
+            # input_corner[0] = torch.nn.functional.pad(input_corner[0].permute([1,2,3,0]), (0, self.max_length-len(input_word[0])), 'constant', 0).permute([3,0,1,2])
 
         # pad_sequence to input_word
         input_word_pad = pad_sequence(input_word, batch_first = True, padding_value=self.tokenizer.tokenizer.pad_token_id)
-        input_closeup1_pad = pad_sequence(input_closeup1, batch_first = True, padding_value=0)
-        input_closeup2_pad = pad_sequence(input_closeup2, batch_first = True, padding_value=0)
-        input_closeup3_pad = pad_sequence(input_closeup3, batch_first = True, padding_value=0)
-        input_closeup4_pad = pad_sequence(input_closeup4, batch_first = True, padding_value=0)
-        input_corner_pad = pad_sequence(input_corner, batch_first = True, padding_value=0)
+        # input_closeup1_pad = pad_sequence(input_closeup1, batch_first = True, padding_value=0)
+        # input_closeup2_pad = pad_sequence(input_closeup2, batch_first = True, padding_value=0)
+        # input_closeup3_pad = pad_sequence(input_closeup3, batch_first = True, padding_value=0)
+        # input_closeup4_pad = pad_sequence(input_closeup4, batch_first = True, padding_value=0)
+        # input_corner_pad = pad_sequence(input_corner, batch_first = True, padding_value=0)
         
 
         # since padding_mode = 'replicate' didn't work, let's do it manually...
@@ -353,12 +353,12 @@ class ConversationalDM2(pl.LightningDataModule):
           attention_mask_element = torch.nn.functional.pad(attention_mask_list[i], (0, self.max_length-len(attention_mask_list[i])), 'constant', 0)
           attention_mask[i] = attention_mask_element
         
-        del input_word, input_speaker, input_closeup1, input_closeup2, input_closeup3, input_closeup4, input_corner
+        del input_word, input_speaker# , input_closeup1, input_closeup2, input_closeup3, input_closeup4, input_corner
         gc.collect()
         
-        return {'input_ids': input_word_pad, 'speaker_ids': input_speaker_pad, 'attention_mask': attention_mask,
-                'closeup1': input_closeup1_pad, 'closeup2': input_closeup2_pad, 'closeup3': input_closeup3_pad, 'closeup4': input_closeup4_pad,
-                'corner': input_corner_pad}
+        return {'input_ids': input_word_pad, 'speaker_ids': input_speaker_pad, 'attention_mask': attention_mask}# ,
+                # 'closeup1': input_closeup1_pad, 'closeup2': input_closeup2_pad, 'closeup3': input_closeup3_pad, 'closeup4': input_closeup4_pad,
+                # 'corner': input_corner_pad}
     
     def train_dataloader(self):
         return DataLoader(
