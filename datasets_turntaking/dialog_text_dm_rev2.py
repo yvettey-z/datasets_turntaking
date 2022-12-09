@@ -155,68 +155,68 @@ class ConversationalDM2(pl.LightningDataModule):
                             dataset = load_from_disk(os.path.join(self.savepath, split))
                             words = dataset[i]['word'][j]
                             speakers = dataset[i]['speaker_ids'][j]
-                            starting_time_list = list(dataset[i]['word_start_times'][j])
-                            ending_time_list = list(dataset[i]['word_start_times'][j])
+                            # starting_time_list = list(dataset[i]['word_start_times'][j])
+                            # ending_time_list = list(dataset[i]['word_start_times'][j])
                             word_ids_list = list(dataset[i]['word_ids'][j])
-                            frame_closeup1_list = []
-                            frame_closeup2_list = []
-                            frame_closeup3_list = []
-                            frame_closeup4_list = []
-                            frame_corner_list = []
+                            # frame_closeup1_list = []
+                            # frame_closeup2_list = []
+                            # frame_closeup3_list = []
+                            # frame_closeup4_list = []
+                            # frame_corner_list = []
                                 
-                            prev_word_ids = word_ids_list[0]
-                            video = self.get_video(prev_word_ids, 'Closeup1')
-                            for k in range(len(word_ids_list)):
-                                if prev_word_ids != word_ids_list[k]:
-                                    prev_word_ids =word_ids_list[k]
-                                    video = self.get_video(prev_word_ids, 'Closeup1')
-                                frame_closeup1 = self.get_frame(video, starting_time_list[k], ending_time_list[k], frame_definiton='end') 
-                                frame_closeup1_list.append(frame_closeup1)
-                                del frame_closeup1
-                            del video
+                            # prev_word_ids = word_ids_list[0]
+                            # video = self.get_video(prev_word_ids, 'Closeup1')
+                            # for k in range(len(word_ids_list)):
+                            #     if prev_word_ids != word_ids_list[k]:
+                            #         prev_word_ids =word_ids_list[k]
+                                    # video = self.get_video(prev_word_ids, 'Closeup1')
+                                # frame_closeup1 = self.get_frame(video, starting_time_list[k], ending_time_list[k], frame_definiton='end')
+                                # frame_closeup1_list.append(frame_closeup1)
+                                # del frame_closeup1
+                            # del video
                             gc.collect()
-                            print('finish Closeup1')
+                            # print('finish Closeup1')
 
-                            prev_word_ids = word_ids_list[0]
-                            video = self.get_video(prev_word_ids, 'Closeup2')
-                            for k in range(len(word_ids_list)):
-                                if k % 500 == 0:
-                                    print(k)
-                                if prev_word_ids != word_ids_list[k]:
-                                    prev_word_ids = word_ids_list[k]
-                                    video = self.get_video(prev_word_ids, 'Closeup2')
-                                frame_closeup2 = self.get_frame(video, starting_time_list[k], ending_time_list[k], frame_definiton='end') 
-                                frame_closeup2_list.append(frame_closeup2)
-                                del frame_closeup2
-                            del video
+                            # prev_word_ids = word_ids_list[0]
+                            # video = self.get_video(prev_word_ids, 'Closeup2')
+                            # for k in range(len(word_ids_list)):
+                            #     if k % 500 == 0:
+                            #         print(k)
+                            #     if prev_word_ids != word_ids_list[k]:
+                            #         prev_word_ids = word_ids_list[k]
+                            #         video = self.get_video(prev_word_ids, 'Closeup2')
+                            #     frame_closeup2 = self.get_frame(video, starting_time_list[k], ending_time_list[k], frame_definiton='end')
+                            #     frame_closeup2_list.append(frame_closeup2)
+                            #     del frame_closeup2
+                            # del video
                             gc.collect()
-                            print('finish Closeup2')
+                            # print('finish Closeup2')
                                 
-                            prev_word_ids = word_ids_list[0]
-                            video = self.get_video(prev_word_ids, 'Closeup3')
-                            for k in range(len(word_ids_list)):
-                                if prev_word_ids != word_ids_list[k]:
-                                    prev_word_ids = word_ids_list[k]
-                                    video = self.get_video(prev_word_ids, 'Closeup3')
-                                frame_closeup3 = self.get_frame(video, starting_time_list[k], ending_time_list[k], frame_definiton='end') 
-                                frame_closeup3_list.append(frame_closeup3)
-                                del frame_closeup3
-                            del video
+                            # prev_word_ids = word_ids_list[0]
+                            # video = self.get_video(prev_word_ids, 'Closeup3')
+                            # for k in range(len(word_ids_list)):
+                            #     if prev_word_ids != word_ids_list[k]:
+                            #         prev_word_ids = word_ids_list[k]
+                            #         video = self.get_video(prev_word_ids, 'Closeup3')
+                            #     frame_closeup3 = self.get_frame(video, starting_time_list[k], ending_time_list[k], frame_definiton='end')
+                            #     frame_closeup3_list.append(frame_closeup3)
+                             #    del frame_closeup3
+                             #del video
                             gc.collect()
                             print('finish Closeup3')
                                 
-                            prev_word_ids = word_ids_list[0]
-                            video = self.get_video(prev_word_ids, 'Closeup4')
-                            for k in range(len(word_ids_list)):
-                                if prev_word_ids != word_ids_list[k]:
-                                    prev_word_ids = word_ids_list[k]
-                                    video = self.get_video(prev_word_ids, 'Closeup4')
-                                frame_closeup4 = self.get_frame(video, starting_time_list[k], ending_time_list[k], frame_definiton='end') 
-                                frame_closeup4_list.append(frame_closeup4)
-                                del frame_closeup4
-                            del video
-                            gc.collect()
-                            print('finish Closeup4')
+                            # prev_word_ids = word_ids_list[0]
+                             #video = self.get_video(prev_word_ids, 'Closeup4')
+                             #for k in range(len(word_ids_list)):
+                            #   if prev_word_ids != word_ids_list[k]:
+                            #       prev_word_ids = word_ids_list[k]
+                            #       video = self.get_video(prev_word_ids, 'Closeup4')
+                            #   frame_closeup4 = self.get_frame(video, starting_time_list[k], ending_time_list[k], frame_definiton='end')
+                            #   frame_closeup4_list.append(frame_closeup4)
+                            #   del frame_closeup4
+                            #del video
+                            #gc.collect()
+                            # print('finish Closeup4')
                                 
                             prev_word_ids = word_ids_list[0]
                             if prev_word_ids[:2] == 'ES':
@@ -232,38 +232,38 @@ class ConversationalDM2(pl.LightningDataModule):
                             for k in range(len(word_ids_list)):
                                 if prev_word_ids != word_ids_list[k]:
                                     prev_word_ids = word_ids_list[k]
-                                    if prev_word_ids[:2] == 'ES':
-                                        video = self.get_video(prev_word_ids, 'Corner')
-                                    elif prev_word_ids[:2] == 'IS':
-                                        video = self.get_video(prev_word_ids, 'C')
-                                    elif prev_word_ids[:2] == 'TS':
-                                        if (prev_word_ids == 'TS3008b') | (prev_word_ids == 'TS3008c') | (prev_word_ids == 'TS3008d'):
-                                            video = self.get_video(prev_word_ids, 'Overview3')
-                                        else:
-                                            video = self.get_video(prev_word_ids, 'Overview2')
-                                frame_corner = self.get_frame(video, starting_time_list[k], ending_time_list[k], frame_definiton='end') 
-                                frame_corner_list.append(frame_corner)
-                                del frame_corner
-                            del video
+                                #    if prev_word_ids[:2] == 'ES':
+                                #        video = self.get_video(prev_word_ids, 'Corner')
+                                #    elif prev_word_ids[:2] == 'IS':
+                                #        video = self.get_video(prev_word_ids, 'C')
+                                #    elif prev_word_ids[:2] == 'TS':
+                                #        if (prev_word_ids == 'TS3008b') | (prev_word_ids == 'TS3008c') | (prev_word_ids == 'TS3008d'):
+                                #            video = self.get_video(prev_word_ids, 'Overview3')
+                                #        else:
+                                #            video = self.get_video(prev_word_ids, 'Overview2')
+                                # frame_corner = self.get_frame(video, starting_time_list[k], ending_time_list[k], frame_definiton='end')
+                                # frame_corner_list.append(frame_corner)
+                                # del frame_corner
+                            # del video
                             gc.collect()
 
                             input_ids = np.array(words)
                             speaker_ids = np.array(speakers)                        
-                            closeup1 = np.array(frame_closeup1_list)
-                            closeup2 = np.array(frame_closeup2_list)
-                            closeup3 = np.array(frame_closeup3_list)
-                            closeup4 = np.array(frame_closeup4_list)
-                            corner = np.array(frame_corner_list)
+                            # closeup1 = np.array(frame_closeup1_list)
+                            # closeup2 = np.array(frame_closeup2_list)
+                            # closeup3 = np.array(frame_closeup3_list)
+                            # closeup4 = np.array(frame_closeup4_list)
+                            # corner = np.array(frame_corner_list)
                                 
-                            del words, speakers, frame_closeup1_list, frame_closeup2_list, frame_closeup3_list, frame_closeup4_list, frame_corner_list 
+                            del words, speakers #, frame_closeup1_list, frame_closeup2_list, frame_closeup3_list, frame_closeup4_list, frame_corner_list
                             gc.collect()
                                                         
                             np.savez_compressed(data_path, input_ids = input_ids, 
-                                                speaker_ids = speaker_ids, closeup1 = closeup1,
-                                                closeup2 = closeup2, closeup3 = closeup3, 
-                                                closeup4 = closeup4, corner = corner)
+                                                speaker_ids = speaker_ids)# , closeup1 = closeup1,
+                                                # closeup2 = closeup2, closeup3 = closeup3,
+                                                # closeup4 = closeup4, corner = corner
                             
-                            del input_ids, speaker_ids, closeup1, closeup2, closeup3, closeup4, corner
+                            del input_ids, speaker_ids #, closeup1, closeup2, closeup3, closeup4, corner
                             gc.collect()
                 
         train_dir_path = os.path.join(self.tensor_path, 'train')
@@ -346,12 +346,14 @@ class ConversationalDM2(pl.LightningDataModule):
         for i in range(len(input_speaker)):
           input_speaker_element = torch.nn.functional.pad(input_speaker[i], (0, self.max_length-len(input_speaker[i])), 'constant', input_speaker[i][-1].item())
           input_speaker_pad[i] = input_speaker_element
+          del input_speaker_element
 
         # create a tensor to store the result
         attention_mask = torch.zeros_like(input_word_pad)
         for i in range(len(attention_mask_list)):
           attention_mask_element = torch.nn.functional.pad(attention_mask_list[i], (0, self.max_length-len(attention_mask_list[i])), 'constant', 0)
           attention_mask[i] = attention_mask_element
+          del attention_mask_element
         
         del input_word, input_speaker# , input_closeup1, input_closeup2, input_closeup3, input_closeup4, input_corner
         gc.collect()
