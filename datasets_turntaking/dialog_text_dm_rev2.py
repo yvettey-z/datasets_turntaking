@@ -346,7 +346,7 @@ class ConversationalDM2(pl.LightningDataModule):
         for i in range(len(input_speaker)):
           input_speaker_element = torch.nn.functional.pad(input_speaker[i], (0, self.max_length-len(input_speaker[i])), 'constant', input_speaker[i][-1].item())
           print('shape of the input_speaker_pad:', input_speaker_pad.size())
-          print('shape of the input speaker element:', input_speaker_element)
+          print('shape of the input speaker element:', input_speaker_element.size())
           input_speaker_pad[i] = input_speaker_element
 
         # create a tensor to store the result
